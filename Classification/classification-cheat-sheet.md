@@ -1,27 +1,30 @@
 #### Updated Oct. 19, 2017
 
-## Classification
+## Classification Algorithms
+This document is intended for review and to spark discussion. I do not recommend trying to memorize what is below. This list is not a substitute understanding the foundations of each algorithm.
 
+#### General Advice For All Models
+* Whenever you are optimizing on distance, you must standardize your data.
+* 
+#### Naive Bayes
 
-### Naive Bayes
-
-#### Assumptions
+##### Assumptions
 * Independent Features
 
-#### Pros
+##### Pros
 * Fast
 * Performs well even when you break assumptions
 * Works well with limited data (Good place to start with small datasets)
 
-#### Cons
+##### Cons
 * Limited Complexity
 
-#### Terminology
+##### Terminology
 * Laplace Smoothing
 * Underflow/Overflow
 * Gaussian Naive Bayes
 * Bernoulli Naive Bayes
 * Multinomial Naive Bayes
 
-#### Sklearn Modules
+#### Sklearn Tips
 * [GaussianNB](http://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html)
