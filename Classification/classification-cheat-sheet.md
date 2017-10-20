@@ -39,7 +39,8 @@ This document is intended for review and to spark discussion. I do not recommend
 * Log Odds
 
 ##### Hyperparameters
-* $\lambda$: Regularization Strength
+* Regularization Strength
+* Learning Rate
 
 ##### Sklearn Tips
 * By default, `LogisticRegression()` has regularization turned on.
@@ -60,6 +61,7 @@ This document is intended for review and to spark discussion. I do not recommend
 
 ##### Hyperparameters
 * C: Budget for Misclassification
+* Learing Rate
 
 ##### Sklearn Tips
 * When choosing a linear kernel, use `LinearSVC()` over `SVC(kernel = 'linear')`. The former is much faster.
