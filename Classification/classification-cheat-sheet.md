@@ -37,29 +37,78 @@ This document is intended for review and to spark discussion. I do not recommend
 ##### Terminology
 * Sigmoid Function
 * Log Odds
+
+##### Hyperparameters
+* $\lambda$: Regularization Strength
+
 ##### Sklearn Tips
+* By default, `LogisticRegression()` has regularization turned on.
 
 #### Support Vector Machines
 ##### Assumptions
 ##### Pros
 ##### Cons
 ##### Terminology
+* Hinge Loss
+* C
+* Linearly Separable
+* Kernel Trick
+* Support Vectors
+* Hyperplane
+* RBF Kernel
+* Margin
+
+##### Hyperparameters
+* C: Budget for Misclassification
+
 ##### Sklearn Tips
 * When choosing a linear kernel, use `LinearSVC()` over `SVC(kernel = 'linear')`. The former is much faster.
 
 #### Decision Trees
 ##### Assumptions
+* Stationary Data
+
 ##### Pros
+* Easily Interpretable
+* Scale Invariant
+* Can handle missing data
+* Inherently multiclass
+* Naturally includes feature interactions
+* No coefficients
+* Robust to outliers
+
 ##### Cons
+* Prone to overfitting
+* Simplistic
+* Slow with large amounts of data (use XGBoost)
+
 ##### Terminology
+* Entropy, Gini
+* Bit
+* Information Gain
+
 ##### Sklearn Tips
 
 #### Random Forest
 ##### Assumptions
+* Stationary Data
+
 ##### Pros
+* Relatively strong on complex data
+* Outputs feature importance
+* No need for cross-validation (in fact, you should not use cross-validation)
+* Highly parallel
+
 ##### Cons
+* Difficult to interpret
+
 ##### Terminology
+* Bagging, Out-Of-Bag Estimates
+* Greedy Algorithm
+* Ensemble
+
 ##### Sklearn Tips
+* `n_jobs = -1`
 
 #### Naive Bayes
 ##### Assumptions
@@ -85,4 +134,15 @@ This document is intended for review and to spark discussion. I do not recommend
 ##### Pros
 ##### Cons
 ##### Terminology
+* Activation Function
+* Feed Forward
+* Backpropagation
+* Step Function
+* Sigmoid Function
+* Linear Function
+* Rectified Linear Unit
+* Hyperbolic Tangent 
+* Deep Neural Network
+* Fully Connected Network
+
 ##### Sklearn Tips
