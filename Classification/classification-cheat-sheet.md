@@ -109,8 +109,13 @@ This document is intended for review and to spark discussion. I do not recommend
 * Greedy Algorithm
 * Ensemble
 
+##### Notes
+* Do not use cross-validation with a random forest model. Bagging inherently leaves a test set. If you use cross-validation, you won't be consuming the entire training set. Use and out-of-bag estimate instead.
+
 ##### Sklearn Tips
 * `n_jobs = -1`
+* Do not use `GridSearchCV()` or `cross_val_score()`
+* The out-of-bag estimate only scores on accuracy. If you want to score on precision, recall, or somehting else, you'll need to write your own verson.
 
 #### Naive Bayes
 ##### Assumptions
