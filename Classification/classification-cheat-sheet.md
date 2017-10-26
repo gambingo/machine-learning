@@ -17,9 +17,12 @@ This document is intended for review and to spark discussion. I do not recommend
 
 ##### Pros
 * Very interpretable
+* Inherently multi-class
 
 ##### Cons
 * Limited Complexity
+* Does not scale well with large numbers of features or observations
+* Does not handle diverse (non-homogenous) features
 
 ##### Terminology
 * Curse of Dimensionality
@@ -33,7 +36,13 @@ This document is intended for review and to spark discussion. I do not recommend
 #### Logistic Regression
 ##### Assumptions
 ##### Pros
+* Interpretable
+* Scales well with large numbers of features and observations
+
 ##### Cons
+* Not inherently multi-class
+* Does not inherently handle non-homogenous features
+
 ##### Terminology
 * Sigmoid Function
 * Log Odds
@@ -48,7 +57,14 @@ This document is intended for review and to spark discussion. I do not recommend
 #### Support Vector Machines
 ##### Assumptions
 ##### Pros
+* Interpretable
+* Scales with large amounts of data
+
 ##### Cons
+* Not inherently multi-class; must do one vs. rest (one vs. all)
+* Does not scale with large number of features (curse of dimensionality)
+* Does not inherently handle non-homogenous features
+
 ##### Terminology
 * Hinge Loss
 * C
@@ -78,10 +94,12 @@ This document is intended for review and to spark discussion. I do not recommend
 * Naturally includes feature interactions
 * No coefficients
 * Robust to outliers
+* Inherently handles non-homogenous data
 
 ##### Cons
 * Prone to overfitting
 * Simplistic
+* Does not scale well with large numbers of feautures.
 * Slow with large amounts of data (use XGBoost)
 
 ##### Terminology
@@ -100,6 +118,9 @@ This document is intended for review and to spark discussion. I do not recommend
 * Outputs feature importance
 * No need for cross-validation (in fact, you should not use cross-validation)
 * Highly parallel
+* Inherently multi-class
+* Scales well with number of features as each tree chooses a different subset of features
+* Better results than Decision Trees
 
 ##### Cons
 * Difficult to interpret
@@ -125,9 +146,12 @@ This document is intended for review and to spark discussion. I do not recommend
 * Fast
 * Performs well even when you break assumptions
 * Works well with limited data (Good place to start with small datasets)
+* Inherently multi-class
+* Handles non-homogenous data
 
 ##### Cons
 * Limited Complexity
+* Does not scale well with large numbers of features or observations
 
 ##### Terminology
 * Laplace Smoothing
