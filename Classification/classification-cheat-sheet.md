@@ -18,11 +18,11 @@ This document is intended for review and to spark discussion. I do not recommend
 ##### Pros
 * Very interpretable
 * Inherently multi-class
+* Somewhat handles diverse features (must dummify categorical data)
 
 ##### Cons
 * Limited Complexity
 * Does not scale well with large numbers of features or observations
-* Does not handle diverse (non-homogenous) features
 
 ##### Terminology
 * Curse of Dimensionality
@@ -37,11 +37,14 @@ This document is intended for review and to spark discussion. I do not recommend
 ##### Assumptions
 ##### Pros
 * Interpretable
+* Depending on the implementation, can be inherently multi-class
+  * One-vs-All will yield most probable class, but not true probabilities
+  * The multinomial implementation will yield true probabilities, at the expense of computation time
 * Scales well with large numbers of features and observations
+* Somewhat handles diverse features (must dummify categorical data)
 
 ##### Cons
-* Not inherently multi-class
-* Does not inherently handle non-homogenous features
+* 
 
 ##### Terminology
 * Sigmoid Function
@@ -58,11 +61,11 @@ This document is intended for review and to spark discussion. I do not recommend
 ##### Assumptions
 ##### Pros
 * Interpretable
-* Scales with large amounts of data
+* Scales with large amounts features and observations
+* Does not break down as fast as other distance based models as number of features increase
 
 ##### Cons
 * Not inherently multi-class; must do one vs. rest (one vs. all)
-* Does not scale with large number of features (curse of dimensionality)
 * Does not inherently handle non-homogenous features
 
 ##### Terminology
@@ -99,7 +102,7 @@ This document is intended for review and to spark discussion. I do not recommend
 ##### Cons
 * Prone to overfitting
 * Simplistic
-* Does not scale well with large numbers of feautures.
+* Does not scale well with large numbers of feautures
 * Slow with large amounts of data (use XGBoost)
 
 ##### Terminology
@@ -119,11 +122,12 @@ This document is intended for review and to spark discussion. I do not recommend
 * No need for cross-validation (in fact, you should not use cross-validation)
 * Highly parallel
 * Inherently multi-class
-* Scales well with number of features as each tree chooses a different subset of features
 * Better results than Decision Trees
 
 ##### Cons
 * Difficult to interpret
+* Slow with large amounts of data (use XGBoost)
+* Scales slightly better with the number of features than a decision tree, because each tree only looks at a subset of features. But it is still inefficient with lots of columns.
 
 ##### Terminology
 * Bagging, Out-Of-Bag Estimates
@@ -147,11 +151,11 @@ This document is intended for review and to spark discussion. I do not recommend
 * Performs well even when you break assumptions
 * Works well with limited data (Good place to start with small datasets)
 * Inherently multi-class
-* Handles non-homogenous data
+* Scales well with lots of features and observations. Computers are really good at counting
 
 ##### Cons
 * Limited Complexity
-* Does not scale well with large numbers of features or observations
+* Must match implementaion to datatypes
 
 ##### Terminology
 * Laplace Smoothing
