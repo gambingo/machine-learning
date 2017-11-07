@@ -123,6 +123,7 @@ This document is intended for review and to spark discussion. I do not recommend
 * Highly parallel
 * Inherently multi-class
 * Better results than Decision Trees
+* Robust to overfitting
 
 ##### Cons
 * Difficult to interpret
