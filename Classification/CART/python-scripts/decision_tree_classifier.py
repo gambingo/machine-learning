@@ -16,12 +16,14 @@ from collections import defaultdict
 class decision_tree_classifier:
     """Build a single decision tree and using it to predict on new data."""
 
-    def __init__(self, metric='entropy'):
+    def __init__(self, metric='entropy', max_depth=None, repeat_features=True):
         """
         Args:
             metric: (str) 'entropy' or 'gini'
         """
         self.metric = metric
+        self.max_depth = max_depth
+        self.repeat_features = repeat_features
 
 
     def fit(self, features, labels):
@@ -30,7 +32,22 @@ class decision_tree_classifier:
         ---
         See grow_tree() docstring
         """
+        self.depth = 0
         self.tree = self.grow_tree(features, labels)
+
+
+    def grow_tree(self, features, labels):
+        """
+        Grows a single decision tree.
+        ---
+        Args:
+            features:   (array, dataframe) features as columns
+            labels:     (array, dataframe)
+        Returns:
+            tree:       (dict)
+        """
+        data = self.data_to_dict(features, labels=labels)
+        return self.grow_branches(data)
 
 
     def predict(self, features, labels=None):
@@ -68,20 +85,6 @@ class decision_tree_classifier:
                 return self.classify(sub_tree['right'], data)
         else:
             return sub_tree
-
-
-    def grow_tree(self, features, labels):
-        """
-        Grows a single decision tree.
-        ---
-        Args:
-            features:   (array, dataframe) features as columns
-            labels:     (array, dataframe)
-        Returns:
-            tree:       (dict)
-        """
-        data = self.data_to_dict(features, labels=labels)
-        return self.grow_branches(data)
 
 
     def data_to_dict(self, features, labels=None):
@@ -127,6 +130,11 @@ class decision_tree_classifier:
         Returns:
              A dictionary (dict)
         """
+        # self.depth += 1
+        # if self.max_depth:
+        #     if self.depth >= self.max_depth:
+        #         return mode(data['labels'])
+
         if self.uncertainty(data['labels']) == 0 or len(data.keys()) == 1:
             # If the labels are pure or all features have been exhausted
             return mode(data['labels'])
@@ -156,9 +164,13 @@ class decision_tree_classifier:
 
         mask = data[feature_name] < split_point
         for feature in data.keys():
-            if feature != feature_name:
+            if self.repeat_features:
                 left[feature] = data[feature][mask]
                 right[feature] = data[feature][np.invert(mask)]
+            else:
+                if feature != feature_name:
+                    left[feature] = data[feature][mask]
+                    right[feature] = data[feature][np.invert(mask)]
 
         return left, right
 
