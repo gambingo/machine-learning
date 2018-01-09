@@ -18,8 +18,11 @@ class decision_tree_classifier:
 
     def __init__(self, metric='entropy', max_depth=None, repeat_features=True):
         """
-        Args:
-            metric: (str) 'entropy' or 'gini'
+        KWargs:
+            metric:             (str) 'entropy' or 'gini'
+            max_depth:          (str) maximum depth of tree
+            repeat_features:    (bool) whether to split on features that have
+                                already been used in parent nodes
         """
         self.metric = metric
         self.max_depth = max_depth
