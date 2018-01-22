@@ -8,7 +8,7 @@ January, 2017
 import numpy as np
 import pandas as pd
 from math import log
-from statistics import mode
+from scipy.stats import mode
 from collections import Counter
 from collections import defaultdict
 
@@ -33,29 +33,46 @@ class decision_tree_classifier:
         """
         Grows a single decision tree
         ---
-        See grow_tree() docstring
-        """
-        self.depth = 0
-        self.tree = self.grow_tree(features, labels)
-
-
-    def grow_tree(self, features, labels):
-        """
-        Grows a single decision tree.
-        ---
         Args:
             features:   (array, dataframe) features as columns
-            labels:     (array, dataframe)
-        Returns:
-            tree:       (dict)
+            labels:     (array, dataframe) labels as a single column
         """
+        self.depth = 0
         data = self.data_to_dict(features, labels=labels)
-        return self.grow_branches(data)
+        self.tree = self.grow_tree(data)
 
 
-    def predict(self, features, labels=None):
-        """Uses the tree to predict on new data"""
-        data = self.data_to_dict(features, labels=labels)
+    def grow_tree(self, data):
+        """
+        Creates a single node and returns two datasets split on that node.
+        Runs recursively to return a decision tree
+        ---
+        Args:
+            data:   (array, dataframe) features as columns
+        Returns:
+            (dict) A decision tree
+        """
+        if self.uncertainty(data['labels']) == 0 or len(data.keys()) == 1:
+            # If the labels are pure or all features have been exhausted
+            return mode(data['labels'])[0][0]
+
+        gain, feature_name, split_point = self.best_feature(data)
+        left, right = self.split(data, feature_name, split_point)
+        return {'feature_name': feature_name,
+                'gain': gain,
+                'split_point': split_point,
+                'left': self.grow_tree(left),
+                'right': self.grow_tree(right)}
+
+
+    def predict(self, features):
+        """
+        Uses the tree to predict on new data.
+        ---
+        Args:
+            features:   data of the same form provided to self.fit()
+        """
+        data = self.data_to_dict(features)
         predictions = np.array([])
 
         num_points = len(data[list(data.keys())[0]])
@@ -122,33 +139,6 @@ class decision_tree_classifier:
             dictionary['labels'] = np.array(labels)
 
         return dictionary
-
-
-    def grow_branches(self, data):
-        """
-        Creates a single node and returns two datasets split on that node.
-        ---
-        Args:
-            data:   (array, dataframe) features as columns
-        Returns:
-             A dictionary (dict)
-        """
-        # self.depth += 1
-        # if self.max_depth:
-        #     if self.depth >= self.max_depth:
-        #         return mode(data['labels'])
-
-        if self.uncertainty(data['labels']) == 0 or len(data.keys()) == 1:
-            # If the labels are pure or all features have been exhausted
-            return mode(data['labels'])
-
-        gain, feature_name, split_point = self.best_feature(data)
-        left, right = self.split(data, feature_name, split_point)
-        return {'feature_name': feature_name,
-                'gain': gain,
-                'split_point': split_point,
-                'left': self.grow_branches(left),
-                'right': self.grow_branches(right)}
 
 
     def split(self, data, feature_name, split_point):
@@ -260,11 +250,11 @@ class decision_tree_classifier:
     # Both entropy and gini ignore zero probabilites
     def entropy(self, labels):
         """Calculates the entropy for a given set of labels."""
-        probs =  [freq/len(labels) for freq in Counter(labels).values()]
+        probs = [freq/len(labels) for freq in Counter(labels).values()]
         return sum(-p*log(p, 2) for p in probs if p)
 
 
     def gini(self, labels):
-        """Calculates the gini score for a given set of labels"""
-        probs =  [freq/len(labels) for freq in Counter(labels).values()]
+        """Calculates the gini impurity for a given set of labels"""
+        probs = [freq/len(labels) for freq in Counter(labels).values()]
         return sum(p*(1-p) for p in probs if p)
