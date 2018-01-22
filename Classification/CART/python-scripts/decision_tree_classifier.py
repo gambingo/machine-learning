@@ -17,7 +17,7 @@ class decision_tree_classifier:
     """Build a single decision tree and using it to predict on new data."""
 
     def __init__(self, metric='entropy', max_depth=None, repeat_features=True,
-                 uncertainty = 0):
+                 min_uncertainty = 0):
         """
         KWargs:
             metric:             (str) 'entropy' or 'gini'
@@ -28,7 +28,7 @@ class decision_tree_classifier:
         self.metric = metric
         self.max_depth = max_depth
         self.repeat_features = repeat_features
-        self.min_uncertainty = uncertainty
+        self.min_uncertainty = min_uncertainty
 
 
     def fit(self, features, labels):
