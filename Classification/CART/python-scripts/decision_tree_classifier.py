@@ -16,7 +16,8 @@ from collections import defaultdict
 class decision_tree_classifier:
     """Build a single decision tree and using it to predict on new data."""
 
-    def __init__(self, metric='entropy', max_depth=None, repeat_features=True):
+    def __init__(self, metric='entropy', max_depth=None, repeat_features=True,
+                 uncertainty = 0):
         """
         KWargs:
             metric:             (str) 'entropy' or 'gini'
@@ -27,6 +28,7 @@ class decision_tree_classifier:
         self.metric = metric
         self.max_depth = max_depth
         self.repeat_features = repeat_features
+        self.min_uncertainty = uncertainty
 
 
     def fit(self, features, labels):
@@ -48,18 +50,17 @@ class decision_tree_classifier:
         Runs recursively to return a decision tree
         ---
         Args:
-            data:   (array, dataframe) features as columns
+            data:   (dict) data in the format of data_to_dict() output
         Returns:
             (dict) A decision tree
         """
-        if self.uncertainty(data['labels']) == 0 or len(data.keys()) == 1:
-            # If the labels are pure or all features have been exhausted
+        if self.uncertainty(data['labels']) <= self.min_uncertainty:
             return mode(data['labels'])[0][0]
 
         gain, feature_name, split_point = self.best_feature(data)
         left, right = self.split(data, feature_name, split_point)
         return {'feature_name': feature_name,
-                'gain': gain,
+                'information_gain': gain,
                 'split_point': split_point,
                 'left': self.grow_tree(left),
                 'right': self.grow_tree(right)}
@@ -197,8 +198,8 @@ class decision_tree_classifier:
 
     def best_split(self, feature, labels):
         """
-        For a single feature, calculates the entropy (gini) of splitting on each
-        data point and returns the best split point.
+        For a single feature, calculate the uncertainty of splitting on each
+        data point and return the best split point.
         ---
         Args:
             feature:    (list, array) data to split on
@@ -212,7 +213,7 @@ class decision_tree_classifier:
             raise Exception('Feature data and labels must be the same length.')
 
         lowest_entropy = 10
-        for test_point in sorted(set(feature)):
+        for test_point in set(feature):
             mask = [pt<test_point for pt in feature]
             left = labels[mask]
             right = labels[np.invert(mask)]
@@ -226,9 +227,9 @@ class decision_tree_classifier:
 
             if net < lowest_entropy:
                 lowest_entropy = net
-                split_point = test_point
+                best_split_point = test_point
 
-        return split_point, lowest_entropy
+        return best_split_point, lowest_entropy
 
 
     def uncertainty(self, labels):
@@ -251,10 +252,10 @@ class decision_tree_classifier:
     def entropy(self, labels):
         """Calculates the entropy for a given set of labels."""
         probs = [freq/len(labels) for freq in Counter(labels).values()]
-        return sum(-p*log(p, 2) for p in probs if p)
+        return sum(-p*log(p, 2) if p else 0 for p in probs)
 
 
     def gini(self, labels):
         """Calculates the gini impurity for a given set of labels"""
         probs = [freq/len(labels) for freq in Counter(labels).values()]
-        return sum(p*(1-p) for p in probs if p)
+        return sum(p*(1-p) for p in probs)# if p)
