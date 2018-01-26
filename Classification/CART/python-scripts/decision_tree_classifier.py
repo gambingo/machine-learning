@@ -56,14 +56,14 @@ class decision_tree_classifier:
         """
         if self.uncertainty(data['labels']) <= self.min_uncertainty:
             return mode(data['labels'])[0][0]
-
-        gain, feature_name, split_point = self.best_feature(data)
-        left, right = self.split(data, feature_name, split_point)
-        return {'feature_name': feature_name,
-                'information_gain': gain,
-                'split_point': split_point,
-                'left': self.grow_tree(left),
-                'right': self.grow_tree(right)}
+        else:
+            gain, feature_name, split_point = self.best_feature(data)
+            left, right = self.split(data, feature_name, split_point)
+            return {'feature_name': feature_name,
+                    'information_gain': gain,
+                    'split_point': split_point,
+                    'left': self.grow_tree(left),
+                    'right': self.grow_tree(right)}
 
 
     def predict(self, features):
@@ -250,12 +250,12 @@ class decision_tree_classifier:
 
     # Both entropy and gini ignore zero probabilites
     def entropy(self, labels):
-        """Calculates the entropy for a given set of labels."""
+        """Calculates the entropy of a given set of labels."""
         probs = [freq/len(labels) for freq in Counter(labels).values()]
         return sum(-p*log(p, 2) if p else 0 for p in probs)
 
 
     def gini(self, labels):
-        """Calculates the gini impurity for a given set of labels"""
+        """Calculates the gini impurity of a given set of labels"""
         probs = [freq/len(labels) for freq in Counter(labels).values()]
         return sum(p*(1-p) for p in probs)# if p)
